@@ -137,9 +137,9 @@ class Tag
     /**
      * Get priority
      *
-     * @return string
+     * @return float
      */
-    public function getPriority(): string
+    public function getPriority(): float
     {
         return $this->tag->priority;
     }

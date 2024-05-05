@@ -114,14 +114,14 @@ class Utils
         /** @var array<\ReflectionParameter> */
         $signatureParameters = $route->signatureParameters();
 
-        /** @var \ReflectionParameter|null */
         return \collect($signatureParameters)
             ->filter(function (\ReflectionParameter $param) {
                 $reflexionType = $param->getType();
                 if (!($reflexionType instanceof \ReflectionNamedType)) {
                     return false;
                 }
-                return in_array(Model::class, \class_parents($reflexionType->getName()));
+                return !$reflexionType->isBuiltin() and
+                    in_array(Model::class, \class_parents($reflexionType->getName()));
             })->count() !== 0;
     }
 }

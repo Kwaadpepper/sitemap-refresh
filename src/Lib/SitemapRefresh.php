@@ -105,13 +105,15 @@ class SitemapRefresh
                 'sitemap-refresh.completeWith array second element is not string'
             );
         }
-        $expectedType = Sitemap::class;
-        $refClass     = new \ReflectionClass($class);
+        $expectedType  = Sitemap::class;
+        $refClass      = new \ReflectionClass($class);
+        $refParameters = $refClass->getMethod($method)->getParameters();
         if (
             !$refClass->hasMethod($method) or
             !$refClass->getMethod($method)->isStatic() or
-            $refClass->getMethod($method)->getNumberOfParameters() !== 1 or
-            $refClass->getMethod($method)->getParameters()[0]->getType()->getName() !== $expectedType
+            count($refParameters) !== 1 or
+            !($refType = $refParameters[0]->getType()) or
+            ($refType instanceof \ReflectionNamedType ? $refType->getName() : '') !== $expectedType
         ) {
             throw new SitemapException(
                 "sitemap-refresh.completeWith array second element is not a static

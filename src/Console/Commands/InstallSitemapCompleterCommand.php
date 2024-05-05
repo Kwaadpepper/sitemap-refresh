@@ -82,7 +82,7 @@ class InstallSitemapCompleterCommand extends Command
      * Install default completer class in config
      *
      * @return boolean
-     * @throws Kwaadpepper\SitemapRefresh\Exceptions\SitemapException In case of failure.
+     * @throws \Kwaadpepper\SitemapRefresh\Exceptions\SitemapException In case of failure.
      */
     private function installDefaultCompleterClass(): bool
     {
@@ -124,7 +124,7 @@ class InstallSitemapCompleterCommand extends Command
     /**
      * Try to copy CompleteSitemapClass to Lib
      * @return string The namespace path where it has been copied.
-     * @throws Kwaadpepper\SitemapRefresh\Exceptions\SitemapException In case of failure.
+     * @throws \Kwaadpepper\SitemapRefresh\Exceptions\SitemapException In case of failure.
      */
     private function copyCompleteSitemapWithClass(): ?string
     {

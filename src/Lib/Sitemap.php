@@ -87,27 +87,26 @@ class Sitemap
      *
      * @param  \Spatie\Sitemap\Tags\Url $spatie_tag
      *
-     * @return Tag|null
+     * @return void
      */
     private function addTag(Url $spatie_tag): void
     {
         try {
-            $tag     = new Tag($spatie_tag);
-            $queries = \collect(\parse_url($tag->getUrl(), \PHP_URL_QUERY))->filter();
-            // ! Ignore null from previous or tags with urls that have Queries.
-            if (!$tag or $queries->count()) {
+            $tag = new Tag($spatie_tag);
+            /** @var array */
+            $queries = \parse_url($tag->getUrl(), \PHP_URL_QUERY);
+            // ! Ignore tags with urls that have Queries.
+            if (\collect($queries)->filter()->count()) {
                 return;
             }
             $this->tagList->push($tag);
-            $this->sitemap->add($tag->getTag());
+            $this->sitemap->add($spatie_tag);
         } catch (SitemapResolveUrlException $e) {
             $headMimeType = Utils::getUrlMimeType($spatie_tag->url);
             if (in_array('html', MimeTypes::getDefault()->getExtensions($headMimeType))) {
                 // * Report uniquement si l'url pointe sur une page HMTL.
                 report($e);
             }
-            // Ignorer le tag dans tout les cas.
-            return;
         }
     }
 
