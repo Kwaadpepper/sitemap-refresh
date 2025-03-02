@@ -14,8 +14,8 @@
         "Sitemap"
     ],
     "require": {
-        "illuminate/support": "~11",
-        "laravel/framework": "~11",
+        "illuminate/support": "~11|~12",
+        "laravel/framework": "~11|~12",
         "spatie/laravel-sitemap": "^7.3.0"
     },
     "autoload": {
