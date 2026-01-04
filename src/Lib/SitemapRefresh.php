@@ -3,6 +3,7 @@
 namespace Kwaadpepper\SitemapRefresh\Lib;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Kwaadpepper\SitemapRefresh\Exceptions\SitemapException;
 use Kwaadpepper\SitemapRefresh\Exceptions\SitemapResolveUrlException;
 use Psr\Http\Message\UriInterface;
@@ -138,7 +139,7 @@ class SitemapRefresh
                 $headMimeType = Utils::getUrlMimeType($url);
                 if (in_array('html', MimeTypes::getDefault()->getExtensions($headMimeType))) {
                     // * Report uniquement si l'url pointe sur une page HMTL.
-                    report($e);
+                    Log::warning('SitemapRefresh: Could not resolve url during ignore filter: ' . (string)$url . ' - ' . $e->getMessage());
                 }
                 return false;
             }
