@@ -3,6 +3,7 @@
 namespace Kwaadpepper\SitemapRefresh\Lib;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Kwaadpepper\SitemapRefresh\Exceptions\SitemapResolveUrlException;
 use Spatie\Sitemap\Sitemap as SpatieSitemap;
 use Spatie\Sitemap\Tags\Url;
@@ -105,7 +106,7 @@ class Sitemap
             $headMimeType = Utils::getUrlMimeType($spatie_tag->url);
             if (in_array('html', MimeTypes::getDefault()->getExtensions($headMimeType))) {
                 // * Report uniquement si l'url pointe sur une page HMTL.
-                report($e);
+                Log::warning('SitemapRefresh: Could not resolve url for sitemap entry: ' . $spatie_tag->url . ' - ' . $e->getMessage());
             }
         }
     }
