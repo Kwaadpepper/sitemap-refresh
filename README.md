@@ -33,7 +33,7 @@ MIT. Please see the [license file](license.md) for more information.
 
 [ico-version]: https://img.shields.io/packagist/v/kwaadpepper/sitemap-refresh?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/kwaadpepper/sitemap-refresh?style=flat-square
-[ico-ci]: https://img.shields.io/github/actions/workflow/status/Kwaadpepper/sitemap-refresh/ci.yml?branch=master&style=flat-square&label=CI
+[ico-ci]: https://img.shields.io/github/actions/workflow/status/Kwaadpepper/sitemap-refresh/ci.yml?branch=main&style=flat-square&label=CI
 
 [link-packagist]: https://packagist.org/packages/kwaadpepper/sitemap-refresh
 [link-downloads]: https://packagist.org/packages/kwaadpepper/sitemap-refresh
