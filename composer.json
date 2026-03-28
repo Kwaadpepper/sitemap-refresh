@@ -36,9 +36,17 @@
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Kwaadpepper\\SitemapRefresh\\Tests\\": "tests/"
+        }
+    },
     "require-dev": {
         "slevomat/coding-standard": "^8.11",
         "larastan/larastan": "^3.9",
         "orchestra/testbench": "^9.0|^10.0|^11.0"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
     }
 }
