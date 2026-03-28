@@ -2,7 +2,7 @@
 
 All notable changes to `sitemap-refresh` will be documented in this file.
 
-## Version 2.1.0
+## Version 2.3.0
 
 - Added Laravel 13 support
 - Bumped `spatie/laravel-sitemap` to `^7.4`
