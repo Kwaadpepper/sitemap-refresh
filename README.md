@@ -1,5 +1,9 @@
 # Refresh Sitemap
 
+[![Latest Version on Packagist][ico-version]][link-packagist]
+[![Total Downloads][ico-downloads]][link-downloads]
+[![CI][ico-ci]][link-ci]
+
 Creates sitemap.xml and refresh using a config file
 
 ## Installation
@@ -26,3 +30,13 @@ Please see the [changelog](changelog.md) for more information on what has change
 ## License
 
 MIT. Please see the [license file](license.md) for more information.
+
+[ico-version]: https://img.shields.io/packagist/v/kwaadpepper/sitemap-refresh?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/kwaadpepper/sitemap-refresh?style=flat-square
+[ico-ci]: https://img.shields.io/github/actions/workflow/status/Kwaadpepper/sitemap-refresh/ci.yml?branch=master&style=flat-square&label=CI
+
+[link-packagist]: https://packagist.org/packages/kwaadpepper/sitemap-refresh
+[link-downloads]: https://packagist.org/packages/kwaadpepper/sitemap-refresh
+[link-ci]: https://github.com/Kwaadpepper/sitemap-refresh/actions/workflows/ci.yml
+[link-author]: https://github.com/kwaadpepper
+[link-contributors]: ../../contributors
