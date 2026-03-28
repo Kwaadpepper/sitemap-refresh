@@ -14,6 +14,7 @@
         "Sitemap"
     ],
     "require": {
+        "php": "^8.3",
         "illuminate/support": "~11|~12",
         "laravel/framework": "~11|~12",
         "spatie/laravel-sitemap": "^7.3.0"
@@ -36,8 +37,8 @@
         }
     },
     "require-dev": {
-        "slevomat/coding-standard": "^8.15",
-        "larastan/larastan": "^2.0",
-        "orchestra/testbench": "^9.0"
+        "slevomat/coding-standard": "^8.11",
+        "larastan/larastan": "^3.9",
+        "orchestra/testbench": "^9.0|^10.0"
     }
 }
