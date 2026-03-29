@@ -2,6 +2,10 @@
 
 All notable changes to `sitemap-refresh` will be documented in this file.
 
+## Version 2.3.2
+
+- Refactored URL normalization helpers so the package passes PHPCS without changing runtime behavior
+
 ## Version 2.3.1
 
 - Fixed URL canonicalization inside the sitemap wrapper to deduplicate equivalent entries such as the root URL with and without a trailing slash
