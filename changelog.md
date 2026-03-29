@@ -2,6 +2,12 @@
 
 All notable changes to `sitemap-refresh` will be documented in this file.
 
+## Version 2.3.1
+
+- Fixed URL canonicalization inside the sitemap wrapper to deduplicate equivalent entries such as the root URL with and without a trailing slash
+- Forced Laravel's URL generator to use `app.url` during sitemap generation so `completeWith` callbacks stay on the same canonical domain as the crawler
+- Added regression tests for normalized deduplication and forced URL generation context
+
 ## Version 2.3.0
 
 - Added Laravel 13 support

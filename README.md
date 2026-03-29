@@ -23,6 +23,13 @@ npm i puppeteer # Pour exec en JS
 3. You can test your configuration using `php artisan sitemap:refresh --dry-run`
 4. If you wish to complete the sitemap (like if random models are displayed) run `php artisan sitemap:install`, then add urls in *app/lib/CompleteSitemapWith*
 
+### URL generation notes
+
+- Sitemap entries are normalized before being stored, so equivalent URLs like `https://example.com` and `https://example.com/` are exported only once.
+- Default ports are removed during normalization and hosts are canonicalized to lowercase.
+- Query strings are still ignored by the package unless you explicitly index them yourself.
+- During sitemap generation, `app.url` is temporarily forced into Laravel's URL generator. This ensures URLs produced from `route()`, `url()` or custom `completeWith` callbacks stay on the same canonical domain as the crawler.
+
 ## Change log
 
 Please see the [changelog](changelog.md) for more information on what has changed recently.
@@ -38,5 +45,3 @@ MIT. Please see the [license file](license.md) for more information.
 [link-packagist]: https://packagist.org/packages/kwaadpepper/sitemap-refresh
 [link-downloads]: https://packagist.org/packages/kwaadpepper/sitemap-refresh
 [link-ci]: https://github.com/Kwaadpepper/sitemap-refresh/actions/workflows/ci.yml
-[link-author]: https://github.com/kwaadpepper
-[link-contributors]: ../../contributors
