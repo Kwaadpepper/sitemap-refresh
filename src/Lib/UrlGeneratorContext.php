@@ -21,29 +21,13 @@ class UrlGeneratorContext
             return $absoluteUrl;
         }
 
-        $scheme = isset($parts['scheme']) ? \strtolower($parts['scheme']) : 'http';
-        $host = isset($parts['host']) ? \strtolower($parts['host']) : '';
+        $scheme = self::normalizeScheme($parts);
+        $host = self::normalizeHost($parts);
         $port = $parts['port'] ?? null;
-        $path = $parts['path'] ?? '/';
+        $path = self::normalizePath($parts);
         $query = $parts['query'] ?? null;
 
-        if ($path === '') {
-            $path = '/';
-        }
-
-        if ($path !== '/') {
-            $path = \rtrim($path, '/');
-        }
-
-        $userInfo = '';
-        if (isset($parts['user'])) {
-            $userInfo = $parts['user'];
-            if (isset($parts['pass'])) {
-                $userInfo .= ':' . $parts['pass'];
-            }
-
-            $userInfo .= '@';
-        }
+        $userInfo = self::buildUserInfo($parts);
 
         $normalizedUrl = $scheme . '://' . $userInfo . $host;
 
@@ -99,5 +83,57 @@ class UrlGeneratorContext
     {
         return ($scheme === 'http' && $port === 80)
             || ($scheme === 'https' && $port === 443);
+    }
+
+    /**
+     * @param array<string, int|string> $parts
+     * @return string
+     */
+    private static function normalizeScheme(array $parts): string
+    {
+        return isset($parts['scheme']) ? \strtolower((string) $parts['scheme']) : 'http';
+    }
+
+    /**
+     * @param array<string, int|string> $parts
+     * @return string
+     */
+    private static function normalizeHost(array $parts): string
+    {
+        return isset($parts['host']) ? \strtolower((string) $parts['host']) : '';
+    }
+
+    /**
+     * @param array<string, int|string> $parts
+     * @return string
+     */
+    private static function normalizePath(array $parts): string
+    {
+        $path = isset($parts['path']) ? (string) $parts['path'] : '/';
+
+        if ($path === '') {
+            return '/';
+        }
+
+        return $path === '/' ? $path : \rtrim($path, '/');
+    }
+
+    /**
+     * @param array<string, int|string> $parts
+     * @return string
+     */
+    private static function buildUserInfo(array $parts): string
+    {
+        if (!isset($parts['user'])) {
+            return '';
+        }
+
+        $userInfo = (string) $parts['user'];
+
+        if (isset($parts['pass'])) {
+            $userInfo .= ':' . $parts['pass'];
+        }
+
+        return $userInfo . '@';
     }
 }
