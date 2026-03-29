@@ -12,6 +12,7 @@ class SitemapTest extends TestCase
 {
     private const HOME_URL = 'http://localhost/';
     private const ABOUT_URL = 'http://localhost/about';
+    private const CONTACT_URL = 'http://localhost/contact';
 
     // ---------------------------------------------------------------
     // Constructor — wrapping Spatie sitemap
@@ -64,7 +65,7 @@ class SitemapTest extends TestCase
         $sitemap = new Sitemap($spatieSitemap);
 
         // When we merge two more URLs
-        $sitemap->mergeUrls([self::ABOUT_URL, 'http://localhost/contact']);
+        $sitemap->mergeUrls([self::ABOUT_URL, self::CONTACT_URL]);
 
         // Then the sitemap contains all three
         $this->assertCount(3, $sitemap->getTagList());
@@ -87,6 +88,39 @@ class SitemapTest extends TestCase
         // Then defaults from config are applied
         $this->assertSame('weekly', $tag->getChangeFrequency());
         $this->assertSame(0.8, $tag->getPriority());
+    }
+
+    #[Test]
+    public function it_deduplicates_root_urls_with_and_without_trailing_slash(): void
+    {
+        $sitemap = new Sitemap(SpatieSitemap::create());
+
+        $sitemap->mergeUrls(['http://localhost', self::HOME_URL]);
+
+        $this->assertCount(1, $sitemap->getTagList());
+        $this->assertSame(self::HOME_URL, $sitemap->getTagList()->first()->getUrl());
+    }
+
+    #[Test]
+    public function it_deduplicates_relative_and_absolute_urls_that_point_to_the_same_route(): void
+    {
+        $sitemap = new Sitemap(SpatieSitemap::create());
+
+        $sitemap->mergeUrls(['/about', self::ABOUT_URL]);
+
+        $this->assertCount(1, $sitemap->getTagList());
+        $this->assertSame(self::ABOUT_URL, $sitemap->getTagList()->first()->getUrl());
+    }
+
+    #[Test]
+    public function it_deduplicates_non_root_urls_with_and_without_trailing_slash(): void
+    {
+        $sitemap = new Sitemap(SpatieSitemap::create());
+
+        $sitemap->mergeUrls([self::CONTACT_URL . '/', self::CONTACT_URL]);
+
+        $this->assertCount(1, $sitemap->getTagList());
+        $this->assertSame(self::CONTACT_URL, $sitemap->getTagList()->first()->getUrl());
     }
 
     // ---------------------------------------------------------------

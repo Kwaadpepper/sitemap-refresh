@@ -8,6 +8,7 @@ use Kwaadpepper\SitemapRefresh\Exceptions\SitemapException;
 use Kwaadpepper\SitemapRefresh\Lib\Sitemap;
 use Kwaadpepper\SitemapRefresh\Lib\SitemapRefresh;
 use Kwaadpepper\SitemapRefresh\Lib\Tag;
+use Kwaadpepper\SitemapRefresh\Lib\UrlGeneratorContext;
 use Symfony\Component\Console\Helper\Table;
 
 class GenerateSitemapCommand extends Command
@@ -33,12 +34,14 @@ class GenerateSitemapCommand extends Command
      */
     public function handle(): int
     {
-        $app_url = \url(\config('app.url'));
-
-        $sitemapRefresh = new SitemapRefresh($app_url);
+        $app_url = UrlGeneratorContext::normalize((string) \config('app.url'));
 
         $this->info('Generating Sitemap..');
-        $sitemap = $sitemapRefresh->generate();
+        $sitemap = UrlGeneratorContext::withForcedRoot($app_url, function (string $forcedAppUrl) {
+            $sitemapRefresh = new SitemapRefresh($forcedAppUrl);
+
+            return $sitemapRefresh->generate();
+        });
 
         try {
             if ($this->option('dry-run')) {

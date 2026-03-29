@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Kwaadpepper\SitemapRefresh\Exceptions\SitemapException;
 use Kwaadpepper\SitemapRefresh\Lib\SitemapRefresh;
+use Kwaadpepper\SitemapRefresh\Lib\UrlGeneratorContext;
 
 class GenerateSitemapJob
 {
@@ -21,12 +22,14 @@ class GenerateSitemapJob
      */
     public function handle(): void
     {
-        $app_url = \url(\config('app.url'));
-
-        $sitemapRefresh = new SitemapRefresh($app_url);
+        $app_url = UrlGeneratorContext::normalize((string) \config('app.url'));
 
         Log::debug('Generating Sitemap..');
-        $sitemap = $sitemapRefresh->generate();
+        $sitemap = UrlGeneratorContext::withForcedRoot($app_url, function (string $forcedAppUrl) {
+            $sitemapRefresh = new SitemapRefresh($forcedAppUrl);
+
+            return $sitemapRefresh->generate();
+        });
 
         try {
             $dest = \public_path('sitemap.xml');

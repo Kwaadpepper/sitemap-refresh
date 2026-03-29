@@ -17,6 +17,9 @@ class Sitemap
     /** @var \Illuminate\Support\Collection<\Kwaadpepper\SitemapRefresh\Lib\Tag> */
     private $tagList;
 
+    /** @var array<string, bool> */
+    private $normalizedUrls;
+
     /**
      * Sitemap
      *
@@ -28,6 +31,7 @@ class Sitemap
         // *Assign new sitemap
         $this->sitemap = SpatieSitemap::create();
         $this->tagList = collect();
+        $this->normalizedUrls = [];
         \collect($sitemap->getTags())->map(function (Url $spatie_tag) {
             $this->addTag($spatie_tag);
         });
@@ -92,21 +96,31 @@ class Sitemap
      */
     private function addTag(Url $spatie_tag): void
     {
+        $normalizedUrl = UrlGeneratorContext::normalize($spatie_tag->url);
+
         try {
-            $tag = new Tag($spatie_tag);
-            /** @var array */
-            $queries = \parse_url($tag->getUrl(), \PHP_URL_QUERY);
-            // ! Ignore tags with urls that have Queries.
-            if (\collect($queries)->filter()->count()) {
+            /** @var string|null $query */
+            $query = \parse_url($normalizedUrl, \PHP_URL_QUERY);
+
+            if ($query !== null && $query !== '') {
                 return;
             }
+
+            if (isset($this->normalizedUrls[$normalizedUrl])) {
+                return;
+            }
+
+            $spatie_tag->setUrl($normalizedUrl);
+            $tag = new Tag($spatie_tag);
+
+            $this->normalizedUrls[$normalizedUrl] = true;
             $this->tagList->push($tag);
             $this->sitemap->add($spatie_tag);
         } catch (SitemapResolveUrlException $e) {
-            $headMimeType = Utils::getUrlMimeType($spatie_tag->url);
+            $headMimeType = Utils::getUrlMimeType($normalizedUrl);
             if (in_array('html', MimeTypes::getDefault()->getExtensions($headMimeType))) {
                 // * Report uniquement si l'url pointe sur une page HMTL.
-                Log::warning('SitemapRefresh: Could not resolve url for sitemap entry: ' . $spatie_tag->url . ' - ' . $e->getMessage());
+                Log::warning('SitemapRefresh: Could not resolve url for sitemap entry: ' . $normalizedUrl . ' - ' . $e->getMessage());
             }
         }
     }
@@ -133,22 +147,24 @@ class Sitemap
             $tag->setPriority($defaultPriority);
 
             // * Assign frequency
-            /** @var string|null $routeFrequency */
-            // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundBeforeLastUsed
-            $routeFrequency = $frequencyList->first(function ($frequency, $namePattern) use ($tag) {
+            /** @var string|null $routeFrequencyPattern */
+            $routeFrequencyPattern = $frequencyList->keys()->first(function (string $namePattern) use ($tag) {
                 return Utils::routeIsInList($tag->getRoute(), [$namePattern]);
             });
-            if ($routeFrequency !== null) {
+            if ($routeFrequencyPattern !== null) {
+                /** @var string $routeFrequency */
+                $routeFrequency = $frequencyList->get($routeFrequencyPattern);
                 $tag->setChangeFrequency($routeFrequency);
             }
 
             // * Assign priority
-            /** @var float|null $routePriority */
-            // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundBeforeLastUsed
-            $routePriority = $priorityList->first(function ($priority, $namePattern) use ($tag) {
+            /** @var string|null $routePriorityPattern */
+            $routePriorityPattern = $priorityList->keys()->first(function (string $namePattern) use ($tag) {
                 return Utils::routeIsInList($tag->getRoute(), [$namePattern]);
             });
-            if ($routePriority !== null) {
+            if ($routePriorityPattern !== null) {
+                /** @var float $routePriority */
+                $routePriority = $priorityList->get($routePriorityPattern);
                 $tag->setPriority($routePriority);
             }
         });
